@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from temporalio.client import (
@@ -12,7 +13,7 @@ from temporalio.service import RPCError, RPCStatusCode
 
 from .workflows import GreetingWorkflow, ScheduledHeartbeatWorkflow
 
-TEMPORAL_ADDRESS = "localhost:7233"
+TEMPORAL_ADDRESS = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
 TASK_QUEUE = "greeting-tasks"
 SCHEDULE_ID = "heartbeat-every-10-minutes"
 

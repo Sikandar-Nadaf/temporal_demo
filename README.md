@@ -17,30 +17,49 @@ This is a sample Python FastAPI project integrated with Temporal for workflow or
 
 ## Running Temporal Server
 
-For development, you can run the Temporal server locally using Docker:
+For development, this project includes a Docker Compose setup with Temporal + PostgreSQL:
 
 ```bash
-docker run -p 7233:7233 -p 8233:8233 --rm temporalio/auto-setup:latest
+cp .env.example .env
+docker compose up -d
 ```
 
-Or install Temporal CLI and run:
+Temporal gRPC endpoint: `localhost:7233`
+Temporal UI: `http://localhost:8233`
+
+If you prefer Temporal CLI dev server without Postgres, you can still run:
+
 ```bash
 temporal server start-dev
 ```
 
 ## Running the Application
 
-1. Start the Temporal worker:
+1. Ensure environment variables are available:
+
+   ```
+   cp .env.example .env
+   ```
+
+2. Start the Temporal worker:
+
    ```
    python run_worker.py
    ```
 
-2. In another terminal, start the FastAPI app:
+3. In another terminal, start the FastAPI app:
+
    ```
    python run.py
    ```
 
-3. The API will be available at http://localhost:8000
+4. The API will be available at http://localhost:8000
+
+## Configuration
+
+- `TEMPORAL_ADDRESS`: Temporal server address used by app and worker (default: `localhost:7233`)
+- `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`: used by Docker Compose services
+
 
 ## Usage
 
