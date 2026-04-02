@@ -14,10 +14,11 @@ services:
   temporal:
     image: temporalio/auto-setup:1.25.2
     container_name: temporal-server
+    restart: unless-stopped
     depends_on:
       - postgres
     environment:
-      DB: postgresql
+      DB: postgres12
       DB_PORT: 5432
       POSTGRES_SEEDS: postgres
       POSTGRES_USER: ${POSTGRES_USER:-temporal}
@@ -30,6 +31,7 @@ services:
   fastapi:
     image: python:3.11-slim
     container_name: temporal-fastapi
+    restart: unless-stopped
     depends_on:
       - temporal
     working_dir: /app
@@ -41,6 +43,17 @@ services:
       sh -c "pip install --no-cache-dir -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
+
+  temporalui:
+    image: temporalio/ui:latest
+    container_name: temporal-ui
+    restart: unless-stopped
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+    ports:
+      - "3000:8080"
 
 volumes:
   temporal-postgres-data:
